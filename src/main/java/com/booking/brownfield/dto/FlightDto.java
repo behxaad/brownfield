@@ -6,9 +6,6 @@ import com.booking.brownfield.entity.Fare;
 import com.booking.brownfield.entity.Fleet;
 import com.booking.brownfield.entity.Location;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class FlightDto {
 
 	private int id;

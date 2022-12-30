@@ -21,7 +21,7 @@ public class Booking implements Serializable {
 	private double totalCost;
 	private int seatsBooked;
 	private String seatClass;
-	private int flight_id;
+	private int flightId;
 
 	public int getId() {
 		return id;
@@ -79,12 +79,12 @@ public class Booking implements Serializable {
 		this.seatClass = seatClass;
 	}
 
-	public int getFlight_id() {
-		return flight_id;
+	public int getFlightId() {
+		return flightId;
 	}
 
-	public void setFlight_id(int flight_id) {
-		this.flight_id = flight_id;
+	public void setFlightId(int flightId) {
+		this.flightId = flightId;
 	}
 
 	public static long getSerialversionuid() {
