@@ -17,4 +17,7 @@ public interface LocationDao extends CrudRepository<Location, Integer> {
 
 	public Location findByName(@Param("name") String name);
 
+//	@Query(value = "SELECT id FROM Location l INNER JOIN Flight f ON l.id=f.id", nativeQuery = true)
+//	public Location getIdDA();
+
 }

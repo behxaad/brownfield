@@ -13,7 +13,8 @@ import com.booking.brownfield.entity.Flight;
 public interface FlightDao extends CrudRepository<Flight, Integer> {
 
 	@Query(value = "SELECT * FROM Flight f WHERE f.departure_id=?1 AND f.arrival_id=?2 AND f.travel_date=?3", nativeQuery = true)
-	public List<Flight> findByFlight( int departuteId, int arrivalId,
-			 Date date);
+	public List<Flight> findByFlight(int departuteId, int arrivalId, Date date);
+
+	public Flight findFlightById(int flightId);
 
 }

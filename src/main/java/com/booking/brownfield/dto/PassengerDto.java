@@ -1,17 +1,7 @@
-package com.booking.brownfield.entity;
+package com.booking.brownfield.dto;
 
-import java.io.Serializable;
+public class PassengerDto {
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class Passenger implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -83,10 +73,6 @@ public class Passenger implements Serializable {
 
 	public void setBookingNo(long bookingNo) {
 		this.bookingNo = bookingNo;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }
