@@ -1,9 +1,6 @@
 package com.booking.brownfield.controller;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,12 +21,10 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService;
 
-	@GetMapping("/seatAvailability/{flightId}&{seatsRequired}&{date}&{classType}")
+	@GetMapping("/seatAvailability/{flightId}&{seatsRequired}&{classType}")
 	public ResponseEntity<?> checkSeatAvailability(@PathVariable("flightId") int flightId,
-			@PathVariable("seatsRequired") int seatsRequired,
-			@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-			@PathVariable("classType") String classType) {
-		String msg = bookingService.checkSeatAvailability(flightId, seatsRequired, date, classType);
+			@PathVariable("seatsRequired") int seatsRequired, @PathVariable("classType") String classType) {
+		String msg = bookingService.checkSeatAvailability(flightId, seatsRequired, classType);
 		return new ResponseEntity<>(msg, HttpStatus.OK);
 
 	}
@@ -40,9 +35,9 @@ public class BookingController {
 		return new ResponseEntity<>("Ticket Booked Successfully", HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/delete/{bookingId}")
-	public ResponseEntity<?> cancelTicket(@PathVariable("bookingId") int bookingId) {
-		bookingService.cancelTicket(bookingId);
+	@DeleteMapping("/delete/{bookingNo}")
+	public ResponseEntity<?> cancelTicket(@PathVariable("bookingNo") long bookingNo) {
+		bookingService.cancelTicket(bookingNo);
 		return new ResponseEntity<>("Booking Cancelled Successfully", HttpStatus.OK);
 	}
 

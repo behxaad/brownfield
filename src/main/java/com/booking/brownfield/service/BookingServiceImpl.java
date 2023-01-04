@@ -1,7 +1,6 @@
 package com.booking.brownfield.service;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
 	private static String SORRY = "SORRY ";
 	private static final String FLIGHT_NOT_FOUND = "FLIGHT NOT FOUND";
 	private static final String BOOKING_NOT_FOUND = "BOOKING NOT FOUND";
+	private int totalFare = 0;
 
 	@Autowired
 	private FlightDao flightDao;
@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
 	private BookingDao bookingDao;
 
 	@Override
-	public String checkSeatAvailability(int flightId, int seatsRequired, Date date, String classType) {
+	public String checkSeatAvailability(int flightId, int seatsRequired, String classType) {
 		Optional<Flight> flightCheck = flightDao.findById(flightId);
 
 		if (flightCheck.isPresent()) {
@@ -78,7 +78,8 @@ public class BookingServiceImpl implements BookingService {
 			for (int i = 0; i < passengers.size(); i++) {
 				passengerDao.save(newPassenger.get(i));
 			}
-
+			newBooking.setTotalCost(totalFare);
+//			newBooking.setTravelDate(checkFlight.get().getTravelDate());
 			bookingDao.save(newBooking);
 
 			return true;
@@ -88,14 +89,14 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public boolean cancelTicket(int bookingId) {
-		Optional<Booking> bookingCheck = bookingDao.findById(bookingId);
-		if (bookingCheck.isPresent()) {
-			Flight flight = flightDao.findFlightById(bookingCheck.get().getFlightId());
-			List<Passenger> passenger = passengerDao.findByBookingNo((int) bookingCheck.get().getBookingNo());
+	public boolean cancelTicket(long bookingNo) {
+		Booking bookingCheck = bookingDao.findByBookingNo(bookingNo);
+		if (bookingCheck != null) {
+			Flight flight = flightDao.findFlightById(bookingCheck.getFlightId());
+			List<Passenger> passenger = passengerDao.findByBookingNo(bookingCheck.getBookingNo());
 
-			String classType = bookingCheck.get().getSeatClass();
-			int seat = bookingCheck.get().getSeatsBooked();
+			String classType = bookingCheck.getSeatClass();
+			int seat = bookingCheck.getSeatsBooked();
 
 			if (classType.equalsIgnoreCase("economy")) {
 				flight.setRemainingEconomySeats(flight.getRemainingEconomySeats() + seat);
@@ -111,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
 
 			flightDao.save(flight);
 			passengerDao.deleteAll(passenger);
-			bookingDao.deleteById(bookingId);
+			bookingDao.deleteById(bookingCheck.getId());
 			return true;
 
 		}
@@ -126,6 +127,7 @@ public class BookingServiceImpl implements BookingService {
 			if (classType.equalsIgnoreCase("economy")) {
 				if (flightCheck.get().getRemainingEconomySeats() >= seat) {
 					flightCheck.get().setRemainingEconomySeats(flightCheck.get().getRemainingEconomySeats() - seat);
+					totalFare = flightCheck.get().getFare().getEconomyFare() * seat;
 					return true;
 				}
 
@@ -135,6 +137,7 @@ public class BookingServiceImpl implements BookingService {
 			else if (classType.equalsIgnoreCase("business")) {
 				if (flightCheck.get().getRemainingBusinessSeats() >= seat) {
 					flightCheck.get().setRemainingBusinessSeats(flightCheck.get().getRemainingBusinessSeats() - seat);
+					totalFare = flightCheck.get().getFare().getBusinessFare() * seat;
 					return true;
 				}
 				return false;
@@ -143,6 +146,7 @@ public class BookingServiceImpl implements BookingService {
 			else if (classType.equalsIgnoreCase("premium")) {
 				if (flightCheck.get().getRemainingPremiumSeats() >= seat) {
 					flightCheck.get().setRemainingPremiumSeats(flightCheck.get().getRemainingPremiumSeats() - seat);
+					totalFare = flightCheck.get().getFare().getPremiumFare() * seat;
 					return true;
 
 				}
