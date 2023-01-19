@@ -1,5 +1,6 @@
 package com.booking.brownfield.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ import com.booking.brownfield.exception.RecordNotFoundException;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private static final String USER_ALREADY_PRESENT = "USER ALREADY EXISTS!";
+	private static final String USER_ALREADY_PRESENT = "USER ALREADY EXISTS! OR INVALID DETAILS ENTERED";
 	private static final String USER_NOT_FOUND = "USER NOT FOUND";
 
 	@Autowired
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
 	public boolean addUser(UserDto userdto) {
 		if ((!userdto.getUserName().equals("")) && (!userdto.getPassword().equals(""))
 				&& (!userdto.getEmail().equals(""))) {
+
 			Optional<User> userCheckName = userDao.findByUserName(userdto.getUserName());
 			User user = new User();
 			BeanUtils.copyProperties(userdto, user);
@@ -37,18 +39,21 @@ public class UserServiceImpl implements UserService {
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(user.getEmail());
 
+			List<User> checkMobileNumber = (List<User>) userDao.findAll();
+			Boolean mobileNumberCheck = false;
+			for (int i = 0; i < checkMobileNumber.size(); i++) {
+				if (checkMobileNumber.get(i).getContact().getMobileNumber() == user.getContact().getMobileNumber())
+					mobileNumberCheck = true;
+			}
+
 			if (userDao.findByEmail(user.getEmail()) == null && matcher.matches() && !userCheck.isPresent()
-					&& !userCheckName.isPresent()) {
+					&& !userCheckName.isPresent() && !mobileNumberCheck) {
 
 				userDao.save(user);
 				return true;
 
 			}
 
-		}
-
-		else {
-			throw new RecordAlreadyPresentException("some fields are required");
 		}
 
 		throw new RecordAlreadyPresentException(USER_ALREADY_PRESENT);
