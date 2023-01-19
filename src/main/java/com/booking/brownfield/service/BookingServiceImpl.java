@@ -71,10 +71,11 @@ public class BookingServiceImpl implements BookingService {
 		Optional<Flight> checkFlight = flightDao.findById(booking.getFlightId());
 
 		if (updateSeat(booking.getFlightId(), booking.getSeatsBooked(), booking.getSeatClass())
-				&& checkFlight.isPresent() && booking.getSeatsBooked() > 0) {
+				&& checkFlight.isPresent()) {
 			Booking newBooking = booking;
 			List<Passenger> newPassenger = passengers;
 			newBooking.setTotalCost(totalFare);
+			newBooking.setSeatsBooked(passengers.size());
 			Booking b = bookingDao.save(newBooking);
 			for (int i = 0; i < passengers.size(); i++) {
 				newPassenger.get(i).setBookingNo(b.getBookingNo());

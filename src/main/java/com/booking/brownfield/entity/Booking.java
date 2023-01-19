@@ -26,7 +26,9 @@ public class Booking implements Serializable {
 	private long bookingNo;
 	private Date bookingDate;
 	private Date travelDate;
+	@JsonIgnore
 	private double totalCost;
+	@JsonIgnore
 	private int seatsBooked;
 	private String seatClass;
 	private int flightId;
