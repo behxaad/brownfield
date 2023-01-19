@@ -11,7 +11,7 @@ public interface BookingService {
 
 	public String checkSeatAvailability(int flightId, int seatsRequired, String classType);
 
-	public boolean bookTicket(Booking booking, List<Passenger> passengers);
+	public Long bookTicket(Booking booking, List<Passenger> passengers);
 
 	public boolean cancelTicket(long bookingNo);
 

@@ -7,11 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Passenger implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@JsonIgnore
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -19,6 +22,7 @@ public class Passenger implements Serializable {
 	private String gender;
 	private String mealPref;
 	private String passportNumber;
+	@JsonIgnore
 	private long bookingNo;
 
 	public int getId() {

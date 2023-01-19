@@ -1,5 +1,7 @@
 package com.booking.brownfield.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PassengerDto {
 
 	private int id;
@@ -9,6 +11,7 @@ public class PassengerDto {
 	private String gender;
 	private String mealPref;
 	private String passportNumber;
+	@JsonIgnore
 	private long bookingNo;
 
 	public int getId() {

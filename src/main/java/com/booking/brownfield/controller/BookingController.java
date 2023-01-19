@@ -31,8 +31,8 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<?> bookTicket(@RequestBody CreateBooking booking) {
-		bookingService.bookTicket(booking.getBooking(), booking.getPassengers());
-		return new ResponseEntity<>("Ticket Booked Successfully", HttpStatus.CREATED);
+		long bookingNo=bookingService.bookTicket(booking.getBooking(), booking.getPassengers());
+		return new ResponseEntity<>("Ticket Booked Successfully, Booking No: "+bookingNo, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/delete/{bookingNo}")

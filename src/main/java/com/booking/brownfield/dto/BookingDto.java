@@ -2,7 +2,10 @@ package com.booking.brownfield.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class BookingDto {
+	@JsonIgnore
 	private long bookingNo;
 	private Date bookingDate;
 	private Date travelDate;

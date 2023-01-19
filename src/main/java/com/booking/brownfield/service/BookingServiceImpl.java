@@ -66,24 +66,28 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public boolean bookTicket(Booking booking, List<Passenger> passengers) {
+	public Long bookTicket(Booking booking, List<Passenger> passengers) {
 
 		Optional<Flight> checkFlight = flightDao.findById(booking.getFlightId());
 
 		if (updateSeat(booking.getFlightId(), booking.getSeatsBooked(), booking.getSeatClass())
-				&& checkFlight.isPresent()) {
+				&& checkFlight.isPresent() && booking.getSeatsBooked() > 0) {
 			Booking newBooking = booking;
 			List<Passenger> newPassenger = passengers;
 			newBooking.setTotalCost(totalFare);
 			Booking b = bookingDao.save(newBooking);
 			for (int i = 0; i < passengers.size(); i++) {
 				newPassenger.get(i).setBookingNo(b.getBookingNo());
-				passengerDao.save(newPassenger.get(i));
+				if (newPassenger.get(i).getAge() > 0) {
+					passengerDao.save(newPassenger.get(i));
+				} else
+					throw new RecordNotFoundException("PLEASE ENTER AGE");
+
 			}
 
 //			newBooking.setTravelDate(checkFlight.get().getTravelDate());
 
-			return true;
+			return newBooking.getBookingNo();
 
 		}
 		throw new RecordNotFoundException(TICKETS_NOT_AVAILABLE);
