@@ -1,6 +1,8 @@
 package com.booking.brownfield.service;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,30 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean addUser(UserDto userdto) {
+		if ((!userdto.getUserName().equals("")) && (!userdto.getPassword().equals(""))
+				&& (!userdto.getEmail().equals(""))) {
+			Optional<User> userCheckName = userDao.findByUserName(userdto.getUserName());
+			User user = new User();
+			BeanUtils.copyProperties(userdto, user);
+			Optional<User> userCheck = userDao.findById(user.getId());
+			System.out.println(!userdto.getUserName().equals(null));
 
-		User user = new User();
-		BeanUtils.copyProperties(userdto, user);
-		Optional<User> userCheck = userDao.findById(user.getId());
-		if (userDao.findByEmail(user.getEmail()) == null)
+			String regex = "^[_a-zA-Z0-9]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(user.getEmail());
 
-		{
-			if (!userCheck.isPresent()) {
+			if (userDao.findByEmail(user.getEmail()) == null && matcher.matches() && !userCheck.isPresent()
+					&& !userCheckName.isPresent()) {
+
 				userDao.save(user);
 				return true;
+
 			}
+
+		}
+
+		else {
+			throw new RecordAlreadyPresentException("some fields are required");
 		}
 
 		throw new RecordAlreadyPresentException(USER_ALREADY_PRESENT);

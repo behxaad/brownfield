@@ -5,16 +5,21 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 public class Booking implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private int id;
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GenericGenerator(name = "bookingNo-sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+			@Parameter(name = "sequence_name", value = "user_sequence"),
+			@Parameter(name = "initial_value", value = "1000"), @Parameter(name = "increment_size", value = "1") })
+	@GeneratedValue(generator = "bookingNo-sequence-generator")
 	private long bookingNo;
 	private Date bookingDate;
 	private Date travelDate;
@@ -22,14 +27,6 @@ public class Booking implements Serializable {
 	private int seatsBooked;
 	private String seatClass;
 	private int flightId;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public long getBookingNo() {
 		return bookingNo;

@@ -3,8 +3,6 @@ package com.booking.brownfield.dto;
 import java.util.Date;
 
 public class BookingDto {
-
-	private int id;
 	private long bookingNo;
 	private Date bookingDate;
 	private Date travelDate;
@@ -12,14 +10,6 @@ public class BookingDto {
 	private int seatsBooked;
 	private String seatClass;
 	private int flightId;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public long getBookingNo() {
 		return bookingNo;

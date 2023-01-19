@@ -10,6 +10,7 @@ import com.booking.brownfield.dao.BoardingDao;
 import com.booking.brownfield.dao.BookingDao;
 import com.booking.brownfield.dao.FlightDao;
 import com.booking.brownfield.dto.BoardingDto;
+import com.booking.brownfield.dto.BoardingDtoPass;
 import com.booking.brownfield.entity.Boarding;
 import com.booking.brownfield.entity.Booking;
 import com.booking.brownfield.entity.Flight;
@@ -44,7 +45,7 @@ public class BoardingServiceImpl implements BoardingService {
 				boardingDto.setSeatNo("" + totalSeats + "E");
 				boardingDto.setBagTag("" + totalSeats + "E" + checkBooking.getFlightId());
 				boardingDto.setCheckedIn(true);
-				boardingDto.setTotalCheckedInEconomySeats(boardingDto.getTotalCheckedInEconomySeats()+1);
+				boardingDto.setTotalCheckedInEconomySeats(boardingDto.getTotalCheckedInEconomySeats() + 1);
 			}
 
 			else if (checkBooking.getSeatClass().equalsIgnoreCase("business") && checkFlight.isPresent()) {
@@ -53,7 +54,7 @@ public class BoardingServiceImpl implements BoardingService {
 				boardingDto.setSeatNo("" + totalSeats + "E");
 				boardingDto.setBagTag("" + totalSeats + "E" + checkBooking.getFlightId());
 				boardingDto.setCheckedIn(true);
-				boardingDto.setTotalCheckedInBusinessSeats(boardingDto.getTotalCheckedInBusinessSeats()+1);
+				boardingDto.setTotalCheckedInBusinessSeats(boardingDto.getTotalCheckedInBusinessSeats() + 1);
 
 			}
 
@@ -63,7 +64,7 @@ public class BoardingServiceImpl implements BoardingService {
 				boardingDto.setSeatNo("" + totalSeats + "E");
 				boardingDto.setBagTag("" + totalSeats + "E" + checkBooking.getFlightId());
 				boardingDto.setCheckedIn(true);
-				boardingDto.setTotalCheckedInPremiumSeats(boardingDto.getTotalCheckedInPremiumSeats()+1);
+				boardingDto.setTotalCheckedInPremiumSeats(boardingDto.getTotalCheckedInPremiumSeats() + 1);
 			}
 			Boarding dtoToObject = new Boarding();
 			BeanUtils.copyProperties(boardingDto, dtoToObject);
@@ -86,17 +87,17 @@ public class BoardingServiceImpl implements BoardingService {
 
 		throw new RecordNotFoundException(CHECKIN_NOT_DONE);
 	}
-	
-	public BoardingDto boardingPass(long bookingNo)
-	{
+
+	public BoardingDtoPass boardingPass(long bookingNo) {
 		Optional<Boarding> checkBoarding = boardingDao.findByBookingNo(bookingNo);
-		if(checkBoarding.isPresent())
-		{
-			BoardingDto objectToDto = new BoardingDto();
-			BeanUtils.copyProperties(checkBoarding,objectToDto);
-			return  objectToDto;
+		if (checkBoarding.isPresent()) {
+			BoardingDtoPass objectToDto = new BoardingDtoPass();
+			Booking checkBooking = bookingDao.findByBookingNo(bookingNo);
+			objectToDto.setFlightId(checkBooking.getFlightId());
+			BeanUtils.copyProperties(checkBoarding.get(), objectToDto);
+			return objectToDto;
 		}
-		
+
 		throw new RecordNotFoundException(BOARDING_NOT_DONE);
 	}
 

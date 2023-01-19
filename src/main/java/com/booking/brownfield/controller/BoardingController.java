@@ -37,7 +37,7 @@ public class BoardingController {
 	@GetMapping("/boardingPass/{bookingNo}")
 	public ResponseEntity<?> boardingPass(@PathVariable("bookingNo") long bookingNo) {
 
-		return new ResponseEntity<>(boardingService.boardingStatus(bookingNo), HttpStatus.FOUND);
+		return new ResponseEntity<>(boardingService.boardingPass(bookingNo), HttpStatus.FOUND);
 	}
 
 }
