@@ -33,6 +33,12 @@ public class AdminServiceImpl implements AdminService {
 		BeanUtils.copyProperties(flightdto, flight);
 		Optional<Flight> checkFlight = flightDao.findById(flight.getId());
 		if (!checkFlight.isPresent()) {
+			if(flight.getFare().getBusinessFare()>=1 &&
+				flight.getFare().getEconomyFare()>=1 &&
+				flight.getFare().getPremiumFare()>=1 &&
+				flight.getRemainingBusinessSeats()>=1 &&
+				flight.getRemainingEconomySeats()>=1 &&
+				flight.getRemainingPremiumSeats()>=1) {
 			if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
 				flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
 			}
@@ -42,6 +48,9 @@ public class AdminServiceImpl implements AdminService {
 			}
 			flightDao.save(flight);
 			return true;
+			}else {
+				throw new RecordAlreadyPresentException("enter fares and seats greater than 1");
+			}
 		}
 
 		throw new RecordAlreadyPresentException(FLIGHT_ALREADY_PRESENT);

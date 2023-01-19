@@ -23,17 +23,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean addUser(UserDto userdto) {
+		if ((!userdto.getUserName().equals("")) && (!userdto.getPassword().equals(""))
+				&& (!userdto.getEmail().equals(""))) {
+			Optional<User> userCheckName=userDao.findByUserName(userdto.getUserName());
+			User user = new User();
+			BeanUtils.copyProperties(userdto, user);
+			Optional<User> userCheck = userDao.findById(user.getId());
+			System.out.println(!userdto.getUserName().equals(null));
 
-		User user = new User();
-		BeanUtils.copyProperties(userdto, user);
-		Optional<User> userCheck = userDao.findById(user.getId());
-		if (userDao.findByEmail(user.getEmail()) == null)
+			if (userDao.findByEmail(user.getEmail()) == null)
 
-		{
-			if (!userCheck.isPresent()) {
-				userDao.save(user);
-				return true;
+			{
+
+				if (!userCheck.isPresent() && !userCheckName.isPresent() ) {
+					userDao.save(user);
+					return true;
+				}
+
 			}
+		} else {
+			throw new RecordAlreadyPresentException("some fields are required");
 		}
 
 		throw new RecordAlreadyPresentException(USER_ALREADY_PRESENT);

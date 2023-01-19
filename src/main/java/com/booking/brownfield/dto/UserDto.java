@@ -5,10 +5,13 @@ import com.booking.brownfield.entity.Contact;
 public class UserDto {
 
 	private int id;
+	
 	private String userName;
+	
 	private String password;
 	private String firstName;
 	private String lastName;
+
 	private String email;
 	private Contact contact;
 

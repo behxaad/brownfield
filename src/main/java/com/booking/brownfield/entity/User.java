@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 
 @Entity(name = "users")
 public class User implements Serializable {
@@ -18,10 +19,13 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
+
 	private String userName;
+	
 	private String password;
 	private String firstName;
 	private String lastName;
+	
 	private String email;
 	@OneToOne(targetEntity = Contact.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "contact_id", referencedColumnName = "id")

@@ -74,13 +74,16 @@ public class BookingServiceImpl implements BookingService {
 				&& checkFlight.isPresent()) {
 			Booking newBooking = booking;
 			List<Passenger> newPassenger = passengers;
-
+			newBooking.setTotalCost(totalFare);
+			Booking b=bookingDao.save(newBooking);
 			for (int i = 0; i < passengers.size(); i++) {
+				newPassenger.get(i).setBookingNo(b.getBookingNo());
 				passengerDao.save(newPassenger.get(i));
 			}
-			newBooking.setTotalCost(totalFare);
+			
 //			newBooking.setTravelDate(checkFlight.get().getTravelDate());
-			bookingDao.save(newBooking);
+			
+			
 
 			return true;
 
@@ -112,7 +115,7 @@ public class BookingServiceImpl implements BookingService {
 
 			flightDao.save(flight);
 			passengerDao.deleteAll(passenger);
-			bookingDao.deleteById(bookingCheck.getId());
+			bookingDao.deleteById(bookingCheck.getBookingNo());
 			return true;
 
 		}
