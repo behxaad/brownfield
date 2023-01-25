@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FlightDto {
 
-	@JsonIgnore
 	private int id;
 	private Fleet fleet;
 	private Location departureLocation;

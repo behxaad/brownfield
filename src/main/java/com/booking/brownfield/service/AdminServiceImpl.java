@@ -19,7 +19,7 @@ import com.booking.brownfield.exception.RecordNotFoundException;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-	private static final String FLIGHT_ALREADY_PRESENT = "FLIGHT ALREADY EXISTS! OR INVALID FARE ENTERED";
+	private static final String FLIGHT_ALREADY_PRESENT = "FLIGHT ALREADY EXISTS! OR INVALID DETAILS ENTERED";
 	private static final String FLIGHT_NOT_FOUND = "FLIGHT NOT FOUND";
 
 	@Autowired
