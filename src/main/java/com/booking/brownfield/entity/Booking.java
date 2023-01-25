@@ -25,6 +25,7 @@ public class Booking implements Serializable {
 	@JsonIgnore
 	private long bookingNo;
 	private Date bookingDate;
+	@JsonIgnore
 	private Date travelDate;
 	@JsonIgnore
 	private double totalCost;

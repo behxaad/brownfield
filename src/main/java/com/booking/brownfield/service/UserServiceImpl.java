@@ -18,8 +18,9 @@ import com.booking.brownfield.exception.RecordNotFoundException;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private static final String USER_ALREADY_PRESENT = "USER ALREADY EXISTS! OR INVALID DETAILS ENTERED";
+	private static final String USER_ALREADY_PRESENT = "USER ALREADY EXISTS!";
 	private static final String USER_NOT_FOUND = "USER NOT FOUND";
+	private static final String INVALID_DETAILS_ENTERED = "INVALID DETAILS ENTERED";
 
 	@Autowired
 	private UserDao userDao;
@@ -27,7 +28,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean addUser(UserDto userdto) {
 		if ((!userdto.getUserName().equals("")) && (!userdto.getPassword().equals(""))
-				&& (!userdto.getEmail().equals(""))) {
+				&& (!userdto.getEmail().equals(""))
+				&& Long.toString(userdto.getContact().getMobileNumber()).length() == 10
+				&& Long.toString(userdto.getContact().getZipCode()).length() == 6
+				&& !userdto.getContact().getCity().equals("") && !userdto.getContact().getStreet().equals("")
+				&& !userdto.getContact().getCountry().equals("") && !userdto.getContact().getState().equals("")) {
 
 			Optional<User> userCheckName = userDao.findByUserName(userdto.getUserName());
 			User user = new User();
@@ -54,22 +59,38 @@ public class UserServiceImpl implements UserService {
 
 			}
 
+			throw new RecordAlreadyPresentException(USER_ALREADY_PRESENT);
+
 		}
 
-		throw new RecordAlreadyPresentException(USER_ALREADY_PRESENT);
+		throw new RecordAlreadyPresentException(INVALID_DETAILS_ENTERED);
 	}
 
 	@Override
 	public boolean modifyUser(UserDto userdto) {
 		User user = new User();
 		BeanUtils.copyProperties(userdto, user);
+
+		String regex = "^[_a-zA-Z0-9]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(user.getEmail());
+
 		Optional<User> userCheck = userDao.findById(user.getId());
 		if (userCheck.isPresent()) {
-			userDao.save(user);
-			return true;
+			if (!userdto.getFirstName().equals("") && !userdto.getLastName().equals("")
+					&& Long.toString(userdto.getContact().getMobileNumber()).length() == 10
+					&& Long.toString(userdto.getContact().getZipCode()).length() == 6 && matcher.matches()
+					&& !userdto.getContact().getCity().equals("") && !userdto.getContact().getStreet().equals("")
+					&& !userdto.getContact().getCountry().equals("") && !userdto.getContact().getState().equals("")) {
+				userDao.save(user);
+				return true;
+			}
+
+			throw new RecordAlreadyPresentException(INVALID_DETAILS_ENTERED);
 		}
 
 		throw new RecordNotFoundException(USER_NOT_FOUND);
+
 	}
 
 	@Override

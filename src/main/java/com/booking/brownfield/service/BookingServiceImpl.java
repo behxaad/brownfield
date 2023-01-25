@@ -69,29 +69,31 @@ public class BookingServiceImpl implements BookingService {
 	public Long bookTicket(Booking booking, List<Passenger> passengers) {
 
 		Optional<Flight> checkFlight = flightDao.findById(booking.getFlightId());
+		if (checkFlight.isPresent()) {
+			
+			if (updateSeat(booking.getFlightId(), passengers.size(), booking.getSeatClass())) {
+				Booking newBooking = booking;
+				List<Passenger> newPassenger = passengers;
+				newBooking.setTotalCost(totalFare);
+				newBooking.setSeatsBooked(passengers.size());
+				newBooking.setTravelDate(checkFlight.get().getTravelDate());
+				Booking b = bookingDao.save(newBooking);
+				for (int i = 0; i < passengers.size(); i++) {
+					newPassenger.get(i).setBookingNo(b.getBookingNo());
+					if (newPassenger.get(i).getAge() > 0) {
+						passengerDao.save(newPassenger.get(i));
+					} else
+						throw new RecordNotFoundException("PLEASE ENTER AGE");
 
-		if (updateSeat(booking.getFlightId(), booking.getSeatsBooked(), booking.getSeatClass())
-				&& checkFlight.isPresent()) {
-			Booking newBooking = booking;
-			List<Passenger> newPassenger = passengers;
-			newBooking.setTotalCost(totalFare);
-			newBooking.setSeatsBooked(passengers.size());
-			Booking b = bookingDao.save(newBooking);
-			for (int i = 0; i < passengers.size(); i++) {
-				newPassenger.get(i).setBookingNo(b.getBookingNo());
-				if (newPassenger.get(i).getAge() > 0) {
-					passengerDao.save(newPassenger.get(i));
-				} else
-					throw new RecordNotFoundException("PLEASE ENTER AGE");
+				}
+
+				return newBooking.getBookingNo();
 
 			}
-
-//			newBooking.setTravelDate(checkFlight.get().getTravelDate());
-
-			return newBooking.getBookingNo();
-
+			throw new RecordNotFoundException(TICKETS_NOT_AVAILABLE);
 		}
-		throw new RecordNotFoundException(TICKETS_NOT_AVAILABLE);
+		
+		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
 	}
 
 	@Override

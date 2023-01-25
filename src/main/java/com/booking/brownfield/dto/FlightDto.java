@@ -5,9 +5,11 @@ import java.util.Date;
 import com.booking.brownfield.entity.Fare;
 import com.booking.brownfield.entity.Fleet;
 import com.booking.brownfield.entity.Location;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class FlightDto {
 
+	@JsonIgnore
 	private int id;
 	private Fleet fleet;
 	private Location departureLocation;
