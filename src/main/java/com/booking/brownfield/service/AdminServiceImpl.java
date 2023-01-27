@@ -13,13 +13,15 @@ import com.booking.brownfield.dao.FlightDao;
 import com.booking.brownfield.dao.LocationDao;
 import com.booking.brownfield.dto.FlightDto;
 import com.booking.brownfield.entity.Flight;
+import com.booking.brownfield.entity.Location;
 import com.booking.brownfield.exception.RecordAlreadyPresentException;
 import com.booking.brownfield.exception.RecordNotFoundException;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
-	private static final String FLIGHT_ALREADY_PRESENT = "FLIGHT ALREADY EXISTS! OR INVALID DETAILS ENTERED";
+	private static final String FLIGHT_ALREADY_PRESENT = "FLIGHT ALREADY EXISTS!";
+	private static final String INVALID_DETAILS_ENTERED = "INVALID DETAILS ENTERED";
 	private static final String FLIGHT_NOT_FOUND = "FLIGHT NOT FOUND";
 
 	@Autowired
@@ -32,20 +34,23 @@ public class AdminServiceImpl implements AdminService {
 		Flight flight = new Flight();
 		BeanUtils.copyProperties(flightdto, flight);
 		Optional<Flight> checkFlight = flightDao.findById(flight.getId());
-		if (!checkFlight.isPresent() && flight.getFare().getBusinessFare() >= 1
-				&& flight.getFare().getEconomyFare() >= 1 && flight.getFare().getPremiumFare() >= 1
-				&& flight.getRemainingBusinessSeats() >= 1 && flight.getRemainingEconomySeats() >= 1
-				&& flight.getRemainingPremiumSeats() >= 1) {
+		if (!checkFlight.isPresent()) {
+			if (flight.getFare().getBusinessFare() >= 1 && flight.getFare().getEconomyFare() >= 1
+					&& flight.getFare().getPremiumFare() >= 1 && flight.getFleet().getTotalEconomySeats() >= 1
+					&& flight.getFleet().getTotalBusinessSeats() >= 1
+					&& flight.getFleet().getTotalPremiumSeats() >= 1) {
 
-			if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
-				flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
-			}
+				if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
+					flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
+				}
 
-			if (locationDao.findByName(flight.getArrivalLocation().getName()) != null) {
-				flight.setArrivalLocation(locationDao.findByName(flight.getArrivalLocation().getName()));
+				if (locationDao.findByName(flight.getArrivalLocation().getName()) != null) {
+					flight.setArrivalLocation(locationDao.findByName(flight.getArrivalLocation().getName()));
+				}
+				flightDao.save(flight);
+				return true;
 			}
-			flightDao.save(flight);
-			return true;
+			throw new RecordAlreadyPresentException(INVALID_DETAILS_ENTERED);
 		}
 
 		throw new RecordAlreadyPresentException(FLIGHT_ALREADY_PRESENT);
@@ -63,6 +68,9 @@ public class AdminServiceImpl implements AdminService {
 	public boolean deleteFlight(int flightId) {
 		Optional<Flight> checkFlight = flightDao.findById(flightId);
 		if (checkFlight.isPresent()) {
+			checkFlight.get().setArrivalLocation(null);
+			checkFlight.get().setDepartureLocation(null);
+			flightDao.save(checkFlight.get());
 			flightDao.deleteById(flightId);
 			return true;
 		}

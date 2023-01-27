@@ -21,6 +21,7 @@ import com.booking.brownfield.exception.RecordNotFoundException;
 public class FlightServiceImpl implements FlightService {
 
 	private static final String FLIGHT_NOT_FOUND = "FLIGHT NOT FOUND";
+	private static final String INVALID_SEAT_CLASS = "INVALID SEAT CLASS ENTERED";
 
 	@Autowired
 	private FlightDao flightDao;
@@ -64,7 +65,7 @@ public class FlightServiceImpl implements FlightService {
 			}
 
 			else
-				throw new RecordNotFoundException("Invalid Class Type Entered");
+				throw new RecordNotFoundException(INVALID_SEAT_CLASS);
 		}
 
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);

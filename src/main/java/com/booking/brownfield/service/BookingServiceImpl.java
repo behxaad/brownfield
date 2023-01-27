@@ -22,9 +22,9 @@ import com.booking.brownfield.exception.RecordNotFoundException;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-	private static String TICKETS_NOT_AVAILABLE = "TICKETS NOT AVAILABLE";
+	private static String TICKETS_NOT_AVAILABLE = "APOLOGIES! TICKETS ARE NOT AVAILABLE";
 	private static String SEATS_AVAILABLE = "SEATS ARE AVAILABLE ";
-	private static String SORRY = "SORRY ";
+	private static String SORRY = "SORRY! ";
 	private static final String FLIGHT_NOT_FOUND = "FLIGHT NOT FOUND";
 	private static final String BOOKING_NOT_FOUND = "BOOKING NOT FOUND";
 	private int totalFare = 0;
@@ -83,7 +83,7 @@ public class BookingServiceImpl implements BookingService {
 					if (newPassenger.get(i).getAge() > 0) {
 						passengerDao.save(newPassenger.get(i));
 					} else
-						throw new RecordNotFoundException("PLEASE ENTER AGE");
+						throw new RecordNotFoundException("PLEASE ENTER CORRECT AGE");
 
 				}
 

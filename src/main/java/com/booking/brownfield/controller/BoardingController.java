@@ -27,7 +27,7 @@ public class BoardingController {
 		return new ResponseEntity<>("CheckIn Done", HttpStatus.OK);
 	}
 
-	@GetMapping("/boarding/{bookingNo}")
+	@GetMapping("/boardingCheck/{bookingNo}")
 
 	public ResponseEntity<?> boardingStatus(@PathVariable("bookingNo") long bookingNo) {
 		boardingService.boardingStatus(bookingNo);
@@ -37,7 +37,7 @@ public class BoardingController {
 	@GetMapping("/boardingPass/{bookingNo}")
 	public ResponseEntity<?> boardingPass(@PathVariable("bookingNo") long bookingNo) {
 
-		return new ResponseEntity<>(boardingService.boardingPass(bookingNo), HttpStatus.FOUND);
+		return new ResponseEntity<>(boardingService.boardingPass(bookingNo), HttpStatus.OK);
 	}
 
 }

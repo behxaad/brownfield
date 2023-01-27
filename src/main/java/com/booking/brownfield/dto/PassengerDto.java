@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PassengerDto {
 
+	@JsonIgnore
 	private int id;
 	private String firstName;
 	private String lastName;

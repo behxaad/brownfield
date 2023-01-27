@@ -31,8 +31,8 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<?> bookTicket(@RequestBody CreateBooking booking) {
-		long bookingNo=bookingService.bookTicket(booking.getBooking(), booking.getPassengers());
-		return new ResponseEntity<>("Ticket Booked Successfully, Booking No: "+bookingNo, HttpStatus.CREATED);
+		long bookingNo = bookingService.bookTicket(booking.getBooking(), booking.getPassengers());
+		return new ResponseEntity<>("Ticket Booked Successfully, Booking No: " + bookingNo, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/delete/{bookingNo}")
@@ -43,12 +43,12 @@ public class BookingController {
 
 	@GetMapping("/passengerInfo/{bookingNo}")
 	public ResponseEntity<?> getPassengerInfo(@PathVariable("bookingNo") long bookingNo) {
-		return new ResponseEntity<>(bookingService.getPassengerInfo(bookingNo), HttpStatus.FOUND);
+		return new ResponseEntity<>(bookingService.getPassengerInfo(bookingNo), HttpStatus.OK);
 	}
 
 	@GetMapping("/bookingInfo/{bookingNo}")
 	public ResponseEntity<?> getBookingInfo(@PathVariable("bookingNo") long bookingNo) {
-		return new ResponseEntity<>(bookingService.getBookingInfo(bookingNo), HttpStatus.FOUND);
+		return new ResponseEntity<>(bookingService.getBookingInfo(bookingNo), HttpStatus.OK);
 	}
 
 }
