@@ -13,5 +13,6 @@ public interface AdminService {
 	public boolean deleteFlight(int flightId);
 
 	public boolean modifyFlight(FlightDto flightdto);
-
+	
+	public long totalRevenue();
 }

@@ -83,7 +83,7 @@ public class FlightServiceImpl implements FlightService {
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
 	}
 
-	@Override
+	@Override  //WE ARE NOT DISPLAYING IT TO USER. AS IT MAKES DATA VULNERABLE
 	public List<FlightDto> getAllFlights() {
 		ModelMapper mapper = new ModelMapper();
 		return Arrays.asList(mapper.map(flightDao.findAll(), FlightDto[].class));

@@ -9,11 +9,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.booking.brownfield.dao.BookingDao;
 import com.booking.brownfield.dao.FlightDao;
 import com.booking.brownfield.dao.LocationDao;
 import com.booking.brownfield.dto.FlightDto;
+import com.booking.brownfield.entity.Booking;
 import com.booking.brownfield.entity.Flight;
-import com.booking.brownfield.entity.Location;
 import com.booking.brownfield.exception.RecordAlreadyPresentException;
 import com.booking.brownfield.exception.RecordNotFoundException;
 
@@ -28,6 +29,8 @@ public class AdminServiceImpl implements AdminService {
 	private FlightDao flightDao;
 	@Autowired
 	private LocationDao locationDao;
+	@Autowired
+	private BookingDao bookingDao;
 
 	@Override
 	public boolean addFlight(FlightDto flightdto) {
@@ -91,6 +94,17 @@ public class AdminServiceImpl implements AdminService {
 
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
 
+	}
+
+	@Override
+	public long totalRevenue() {
+		long revenue=0;
+		List<Booking> bookingList = (List<Booking>) bookingDao.findAll();
+		for(int i=0;i<bookingList.size();i++)
+		{
+			revenue += bookingList.get(i).getTotalCost();
+		}
+		return revenue;
 	}
 
 }

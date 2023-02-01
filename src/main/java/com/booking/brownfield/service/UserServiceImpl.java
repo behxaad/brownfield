@@ -27,22 +27,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean addUser(UserDto userdto) {
+		String regex = "^[_a-zA-Z0-9]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(userdto.getEmail());
 		if ((!userdto.getUserName().equals("")) && (!userdto.getPassword().equals(""))
-				&& (!userdto.getEmail().equals(""))
+				&& (!userdto.getEmail().equals("")) && !userdto.getFirstName().equals("")
+				&& !userdto.getLastName().equals("")
 				&& Long.toString(userdto.getContact().getMobileNumber()).length() == 10
 				&& Long.toString(userdto.getContact().getZipCode()).length() == 6
 				&& !userdto.getContact().getCity().equals("") && !userdto.getContact().getStreet().equals("")
-				&& !userdto.getContact().getCountry().equals("") && !userdto.getContact().getState().equals("")) {
+				&& !userdto.getContact().getCountry().equals("") && !userdto.getContact().getState().equals("")
+				&& matcher.matches()) {
 
 			Optional<User> userCheckName = userDao.findByUserName(userdto.getUserName());
 			User user = new User();
 			BeanUtils.copyProperties(userdto, user);
 			Optional<User> userCheck = userDao.findById(user.getId());
 			System.out.println(!userdto.getUserName().equals(null));
-
-			String regex = "^[_a-zA-Z0-9]+@[a-zA-Z]+[.]{1}[a-zA-Z]+$";
-			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(user.getEmail());
 
 			List<User> checkMobileNumber = (List<User>) userDao.findAll();
 			Boolean mobileNumberCheck = false;
@@ -51,8 +52,8 @@ public class UserServiceImpl implements UserService {
 					mobileNumberCheck = true;
 			}
 
-			if (userDao.findByEmail(user.getEmail()) == null && matcher.matches() && !userCheck.isPresent()
-					&& !userCheckName.isPresent() && !mobileNumberCheck) {
+			if (userDao.findByEmail(user.getEmail()) == null && !userCheck.isPresent() && !userCheckName.isPresent()
+					&& !mobileNumberCheck) {
 
 				userDao.save(user);
 				return true;

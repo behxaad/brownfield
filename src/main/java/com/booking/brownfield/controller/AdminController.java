@@ -44,5 +44,11 @@ public class AdminController {
 		adminService.modifyFlight(flightdto);
 		return new ResponseEntity<>("Flight Details Updated", HttpStatus.OK);
 	}
+	
+	@GetMapping("/totalBookingsRevenue")
+	public ResponseEntity<?> totalrevenue()
+	{
+		return new ResponseEntity<>(adminService.totalRevenue(),HttpStatus.OK);
+	}
 
 }

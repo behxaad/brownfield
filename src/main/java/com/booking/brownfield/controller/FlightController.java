@@ -41,9 +41,9 @@ public class FlightController {
 		return new ResponseEntity<>(flightService.getFlight(flightId), HttpStatus.FOUND);
 	}
 
-	@GetMapping
-	public ResponseEntity<?> getAllFlights() {
-		return new ResponseEntity<>(flightService.getAllFlights(), HttpStatus.OK);
-	}
+//	@GetMapping  //WE ARE NOT DISPLAYING IT TO USER. AS IT MAKES DATA VULNERABLE
+//	public ResponseEntity<?> getAllFlights() {
+//		return new ResponseEntity<>(flightService.getAllFlights(), HttpStatus.OK);
+//	}
 
 }
