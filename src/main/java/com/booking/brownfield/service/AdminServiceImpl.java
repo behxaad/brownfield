@@ -91,8 +91,16 @@ public class AdminServiceImpl implements AdminService {
 		BeanUtils.copyProperties(flightdto, flight);
 		Optional<Flight> checkFlight = flightDao.findById(flight.getId());
 		if (checkFlight.isPresent()) {
+			if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
+				flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
+			}
+
+			if (locationDao.findByName(flight.getArrivalLocation().getName()) != null) {
+				flight.setArrivalLocation(locationDao.findByName(flight.getArrivalLocation().getName()));
+			}
 			flightDao.save(flight);
 			return true;
+
 		}
 
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
