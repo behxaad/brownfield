@@ -1,6 +1,10 @@
 package com.booking.brownfield.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class PassengerDto {
 
@@ -9,8 +13,11 @@ public class PassengerDto {
 	private String firstName;
 	private String lastName;
 	private int age;
+	@NotEmpty
 	private String gender;
+	@JsonInclude(Include.NON_EMPTY)
 	private String mealPref;
+	@JsonInclude(Include.NON_EMPTY)
 	private String passportNumber;
 	@JsonIgnore
 	private long bookingNo;

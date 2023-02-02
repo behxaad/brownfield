@@ -70,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
 
 		Optional<Flight> checkFlight = flightDao.findById(booking.getFlightId());
 		if (checkFlight.isPresent()) {
-			
+
 			if (updateSeat(booking.getFlightId(), passengers.size(), booking.getSeatClass())) {
 				Booking newBooking = booking;
 				List<Passenger> newPassenger = passengers;
@@ -78,13 +78,18 @@ public class BookingServiceImpl implements BookingService {
 				newBooking.setSeatsBooked(passengers.size());
 				newBooking.setTravelDate(checkFlight.get().getTravelDate());
 				Booking b = bookingDao.save(newBooking);
+
 				for (int i = 0; i < passengers.size(); i++) {
 					newPassenger.get(i).setBookingNo(b.getBookingNo());
-					if (newPassenger.get(i).getAge() > 0) {
-						passengerDao.save(newPassenger.get(i));
-					} else
+
+					if (newPassenger.get(i).getFirstName().equals("") || newPassenger.get(i).getLastName().equals("")) {
+						throw new RecordNotFoundException("PLEASE FILL FIRST/LAST NAME");
+
+					} else if (newPassenger.get(i).getAge() <= 0) {
 						throw new RecordNotFoundException("PLEASE ENTER CORRECT AGE");
 
+					} else
+						passengerDao.save(newPassenger.get(i));
 				}
 
 				return newBooking.getBookingNo();
@@ -92,8 +97,9 @@ public class BookingServiceImpl implements BookingService {
 			}
 			throw new RecordNotFoundException(TICKETS_NOT_AVAILABLE);
 		}
-		
+
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
+
 	}
 
 	@Override

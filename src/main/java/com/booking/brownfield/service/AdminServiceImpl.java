@@ -38,10 +38,13 @@ public class AdminServiceImpl implements AdminService {
 		BeanUtils.copyProperties(flightdto, flight);
 		Optional<Flight> checkFlight = flightDao.findById(flight.getId());
 		if (!checkFlight.isPresent()) {
-			if (flight.getFare().getBusinessFare() >= 1 && flight.getFare().getEconomyFare() >= 1
+			if (flight.getDepartureTime() != null && flight.getArrivalTime() != null && flight.getTravelDate() != null
+					&& flight.getFare().getBusinessFare() >= 1 && flight.getFare().getEconomyFare() >= 1
 					&& flight.getFare().getPremiumFare() >= 1 && flight.getFleet().getTotalEconomySeats() >= 1
-					&& flight.getFleet().getTotalBusinessSeats() >= 1
-					&& flight.getFleet().getTotalPremiumSeats() >= 1) {
+					&& flight.getFleet().getTotalBusinessSeats() >= 1 && flight.getFleet().getTotalPremiumSeats() >= 1
+					&& flight.getRemainingEconomySeats() <= flight.getFleet().getTotalEconomySeats()
+					&& flight.getRemainingBusinessSeats() <= flight.getFleet().getTotalBusinessSeats()
+					&& flight.getRemainingPremiumSeats() <= flight.getFleet().getTotalPremiumSeats()) {
 
 				if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
 					flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
@@ -98,10 +101,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public long totalRevenue() {
-		long revenue=0;
+		long revenue = 0;
 		List<Booking> bookingList = (List<Booking>) bookingDao.findAll();
-		for(int i=0;i<bookingList.size();i++)
-		{
+		for (int i = 0; i < bookingList.size(); i++) {
 			revenue += bookingList.get(i).getTotalCost();
 		}
 		return revenue;

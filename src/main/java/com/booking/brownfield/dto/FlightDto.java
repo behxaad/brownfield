@@ -13,8 +13,8 @@ public class FlightDto {
 	private Location departureLocation;
 	private Location arrivalLocation;
 	private int remainingEconomySeats;
-	private int remainingPremiumSeats;
 	private int remainingBusinessSeats;
+	private int remainingPremiumSeats;
 	private Date departureTime;
 	private Date arrivalTime;
 	private Date travelDate;
