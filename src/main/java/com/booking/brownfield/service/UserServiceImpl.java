@@ -98,14 +98,14 @@ public class UserServiceImpl implements UserService {
 	public boolean checkUser(String email, String password) {
 
 		User userCheck = userDao.findByEmail(email);
-		if (userCheck != null && userCheck.getPassword().equals(password)) {
+		if (userCheck != null && userCheck.getPassword().equals(password) && !userCheck.getUserName().equals("admin")) {
 			return true;
 		}
 
 		throw new RecordNotFoundException(USER_NOT_FOUND);
 	}
 
-	@Override
+	@Override //WE ARE NOT DISPLAYING IT TO USER. AS IT MAKES DATA VULNERABLE
 	public UserDto getUser(String email) {
 
 		User checkUser = userDao.findByEmail(email);
@@ -116,6 +116,17 @@ public class UserServiceImpl implements UserService {
 		}
 
 		throw new RecordNotFoundException(USER_NOT_FOUND);
+	}
+
+	@Override
+	public boolean checkAdmin(String userName, String password) {
+		Optional<User> checkAdmin = userDao.findByUserName(userName);
+		if (checkAdmin.isPresent() && checkAdmin.get().getPassword().equals(password)) {
+
+			return true;
+
+		}
+		throw new RecordNotFoundException("Admin Credentials Invalid");
 	}
 
 }

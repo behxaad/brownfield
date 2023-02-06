@@ -47,10 +47,10 @@ public class Usercontroller {
 		return new ResponseEntity<>("User Details Modified", HttpStatus.OK);
 	}
 	
-	@GetMapping("/{email}")
-	public ResponseEntity<?> getUser(@PathVariable("email") String email)
-	{
-		return new ResponseEntity<>(userService.getUser(email),HttpStatus.FOUND);
-	}
+//	@GetMapping("/{email}") //HIDING IT TO PREVENT DATA BREACH
+//	public ResponseEntity<?> getUser(@PathVariable("email") String email)
+//	{
+//		return new ResponseEntity<>(userService.getUser(email),HttpStatus.FOUND);
+//	}
 
 }

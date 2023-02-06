@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.booking.brownfield.dto.FlightDto;
 import com.booking.brownfield.service.AdminService;
+import com.booking.brownfield.service.UserService;
 
 @RestController
 @RequestMapping("/admin")
@@ -21,6 +22,8 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/add")
 	public ResponseEntity<?> addFlight(@RequestBody FlightDto flightdto) {
@@ -48,6 +51,16 @@ public class AdminController {
 	@GetMapping("/totalBookingsRevenue")
 	public ResponseEntity<?> totalrevenue() {
 		return new ResponseEntity<>(adminService.totalRevenue(), HttpStatus.OK);
+	}
+
+	@GetMapping("/login/{userName}&{password}")
+	public ResponseEntity<?> login(@PathVariable("userName") String userName, @PathVariable String password) {
+		String loginMsg = "";
+		if (userService.checkAdmin(userName, password)) {
+			loginMsg = "Admin Logged In";
+		}
+		return new ResponseEntity<>(loginMsg, HttpStatus.ACCEPTED);
+
 	}
 
 }

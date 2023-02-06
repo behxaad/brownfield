@@ -91,16 +91,27 @@ public class AdminServiceImpl implements AdminService {
 		BeanUtils.copyProperties(flightdto, flight);
 		Optional<Flight> checkFlight = flightDao.findById(flight.getId());
 		if (checkFlight.isPresent()) {
-			if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
-				flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
+			if (flight.getDepartureTime() != null && flight.getArrivalTime() != null && flight.getTravelDate() != null
+					&& flight.getFare().getBusinessFare() >= 1 && flight.getFare().getEconomyFare() >= 1
+					&& flight.getFare().getPremiumFare() >= 1 && flight.getFleet().getTotalEconomySeats() >= 1
+					&& flight.getFleet().getTotalBusinessSeats() >= 1 && flight.getFleet().getTotalPremiumSeats() >= 1
+					&& flight.getRemainingEconomySeats() <= flight.getFleet().getTotalEconomySeats()
+					&& flight.getRemainingBusinessSeats() <= flight.getFleet().getTotalBusinessSeats()
+					&& flight.getRemainingPremiumSeats() <= flight.getFleet().getTotalPremiumSeats()) {
+
+				if (locationDao.findByName(flight.getDepartureLocation().getName()) != null) {
+					flight.setDepartureLocation(locationDao.findByName(flight.getDepartureLocation().getName()));
+				}
+
+				if (locationDao.findByName(flight.getArrivalLocation().getName()) != null) {
+					flight.setArrivalLocation(locationDao.findByName(flight.getArrivalLocation().getName()));
+				}
+				flightDao.save(flight);
+				return true;
+
 			}
 
-			if (locationDao.findByName(flight.getArrivalLocation().getName()) != null) {
-				flight.setArrivalLocation(locationDao.findByName(flight.getArrivalLocation().getName()));
-			}
-			flightDao.save(flight);
-			return true;
-
+			throw new RecordAlreadyPresentException(INVALID_DETAILS_ENTERED);
 		}
 
 		throw new RecordNotFoundException(FLIGHT_NOT_FOUND);
